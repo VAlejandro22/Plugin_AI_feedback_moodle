@@ -1,0 +1,6 @@
+moodle-data/
+vendor/
+.env
+*.log
+.DS_Store
+composer.lock

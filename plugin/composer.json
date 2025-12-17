@@ -1,0 +1,22 @@
+{
+    "name": "moodle/assignfeedback_ai",
+    "description": "Moodle assignment feedback plugin with AI-powered automatic grading",
+    "type": "moodle-mod",
+    "require": {
+        "php": ">=8.0",
+        "smalot/pdfparser": "^2.0",
+        "phpoffice/phpword": "^1.0",
+        "guzzlehttp/guzzle": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "assignfeedback_ai\\": "classes/"
+        }
+    },
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Moodle AI Feedback Team"
+        }
+    ]
+}
