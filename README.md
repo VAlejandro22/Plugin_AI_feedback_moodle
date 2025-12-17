@@ -274,6 +274,6 @@ Desarrollado como proyecto de tesis para implementación de IA en plataformas ed
 
 ---
 
-**Última actualización**: Diciembre 2024  
+**Última actualización**: Diciembre 2025  
 **Versión del plugin**: 1.0  
 **Compatible con**: Moodle 4.0+
