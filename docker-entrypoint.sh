@@ -22,11 +22,24 @@ echo "MariaDB está lista!"
 chown -R www-data:www-data /var/www/moodledata
 chmod -R 0777 /var/www/moodledata
 
-echo "Moodle listo para instalación web en http://localhost:8080/install.php"
-
-# Asegurar permisos correctos
+# Asegurar permisos correctos del plugin
 chown -R www-data:www-data /var/www/html /var/www/moodledata
 chmod -R 755 /var/www/html/mod/assign/feedback/ai 2>/dev/null || true
+
+# Iniciar servicio de cron en segundo plano
+echo "Iniciando servicio cron para tareas programadas de Moodle..."
+service cron start
+
+echo "=============================================="
+echo "Moodle con Plugin de Feedback IA está listo!"
+echo "=============================================="
+echo ""
+echo "Si es la primera vez:"
+echo "  Accede a http://localhost:8080/install.php"
+echo ""
+echo "Si ya está instalado:"
+echo "  Accede a http://localhost:8080"
+echo "=============================================="
 
 echo "Iniciando Apache..."
 exec "$@"

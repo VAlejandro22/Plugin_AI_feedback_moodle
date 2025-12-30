@@ -1,0 +1,41 @@
+# Docker Compose para desplegar Moodle con Plugin de Feedback IA
+# Usar este archivo en una máquina nueva con la imagen de Docker Hub
+
+version: '3.8'
+
+services:
+  moodle:
+    image: ${DOCKERHUB_USER:-tu-usuario}/moodle-feedback-ia:latest
+    container_name: moodle-app
+    ports:
+      - "8080:80"
+    environment:
+      - MOODLE_DATABASE_HOST=mariadb
+      - MOODLE_DATABASE_NAME=moodle
+      - MOODLE_DATABASE_USER=moodleuser
+      - MOODLE_DATABASE_PASSWORD=moodlepass
+    volumes:
+      - moodledata:/var/www/moodledata
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: moodle-mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_DATABASE=moodle
+      - MYSQL_USER=moodleuser
+      - MYSQL_PASSWORD=moodlepass
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --innodb_file_per_table=1
+    restart: unless-stopped
+
+volumes:
+  moodledata:
+  mariadb_data:

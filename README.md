@@ -4,27 +4,52 @@ Plugin para Moodle que genera automáticamente feedback y calificaciones para en
 
 ## 🚀 Características
 
-- ✅ Evaluación automática con IA (OpenAI GPT-3.5/GPT-4)
+- ✅ Evaluación automática con IA (OpenAI GPT-3.5-turbo, GPT-4o, GPT-4o-mini, GPT-4-turbo)
+- 🤖 Detección de contenido generado por IA
 - 📄 Soporte para archivos TXT, PDF y DOCX
 - 📋 Evaluación basada en rúbricas personalizadas
 - 🔒 Cumplimiento con GDPR
 - 🌐 Multiidioma (Español e Inglés)
 - 🐳 Entorno Docker completo incluido
+- ⚡ Procesamiento automático en primera entrega
 
 ## 📋 Requisitos
 
-- Moodle 4.0 o superior
-- PHP 8.0 o superior
-- MariaDB 10.11 o MySQL 5.7+
-- Docker y Docker Compose (para desarrollo)
+- Docker y Docker Compose
 - API Key de OpenAI
+- (Opcional) Cuenta en Docker Hub para subir la imagen
 
-## 🛠️ Instalación con Docker (Desarrollo)
+---
 
-### Paso 1: Clonar o descargar el proyecto
+## 🚀 Opción 1: Desplegar desde Docker Hub (RECOMENDADO)
+
+### En cualquier máquina nueva:
 
 ```bash
-cd c:\Users\victo\Desktop\TESIS_MICHELLE\MOODLE_NUEVO
+# 1. Crear directorio
+mkdir moodle-ia && cd moodle-ia
+
+# 2. Descargar docker-compose de producción
+curl -O https://raw.githubusercontent.com/tu-usuario/tu-repo/main/docker-compose.prod.yml
+
+# 3. Configurar tu usuario de Docker Hub (editar docker-compose.prod.yml)
+# Cambiar "tu-usuario" por tu usuario real de Docker Hub
+
+# 4. Levantar
+docker-compose -f docker-compose.prod.yml up -d
+
+# 5. Acceder a http://localhost:8080 para completar la instalación
+```
+
+---
+
+## 🛠️ Opción 2: Construcción Local (Desarrollo)
+
+### Paso 1: Clonar el proyecto
+
+```bash
+git clone https://github.com/tu-usuario/MOODLE_NUEVO.git
+cd MOODLE_NUEVO
 ```
 
 ### Paso 2: Levantar los contenedores
@@ -34,10 +59,10 @@ docker-compose up -d
 ```
 
 Este comando:
-- Descarga e instala Moodle 4.0.4
+- Descarga e instala Moodle 4.4
 - Configura MariaDB 10.11
 - Instala el plugin automáticamente
-- Instala las dependencias de PHP vía Composer
+- Inicia el cron de Moodle para procesar tareas
 
 ### Paso 3: Esperar a que termine la instalación
 
@@ -46,8 +71,6 @@ Monitorear los logs (esto puede tomar 3-5 minutos):
 ```powershell
 docker logs -f moodle-app
 ```
-
-Espera a ver el mensaje: "Moodle instalado correctamente!"
 
 ### Paso 4: Acceder a Moodle
 
@@ -255,6 +278,117 @@ curl https://api.openai.com/v1/models -H "Authorization: Bearer TU_API_KEY"
 
 - [Documentación de Moodle](https://docs.moodle.org)
 - [API de OpenAI](https://platform.openai.com/docs)
+
+---
+
+## 🐳 Subir imagen a Docker Hub
+
+### Paso 1: Crear cuenta en Docker Hub
+
+1. Ve a https://hub.docker.com y crea una cuenta
+2. Anota tu nombre de usuario (ej: `michelleuio`)
+
+### Paso 2: Iniciar sesión en Docker
+
+```powershell
+docker login
+# Ingresa tu usuario y contraseña de Docker Hub
+```
+
+### Paso 3: Construir la imagen
+
+```powershell
+cd c:\Users\victo\Desktop\TESIS_MICHELLE\MOODLE_NUEVO
+
+# Construir imagen (reemplaza 'tu-usuario' con tu usuario de Docker Hub)
+docker build -t tu-usuario/moodle-feedback-ia:latest .
+```
+
+### Paso 4: Subir a Docker Hub
+
+```powershell
+docker push tu-usuario/moodle-feedback-ia:latest
+```
+
+### Paso 5: Usar en otra máquina
+
+En la nueva máquina, crea un archivo `docker-compose.yml`:
+
+```yaml
+version: '3.8'
+
+services:
+  moodle:
+    image: tu-usuario/moodle-feedback-ia:latest
+    container_name: moodle-app
+    ports:
+      - "8080:80"
+    environment:
+      - MOODLE_DATABASE_HOST=mariadb
+      - MOODLE_DATABASE_NAME=moodle
+      - MOODLE_DATABASE_USER=moodleuser
+      - MOODLE_DATABASE_PASSWORD=moodlepass
+    volumes:
+      - moodledata:/var/www/moodledata
+    depends_on:
+      - mariadb
+    restart: unless-stopped
+
+  mariadb:
+    image: mariadb:10.11
+    container_name: moodle-mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpass
+      - MYSQL_DATABASE=moodle
+      - MYSQL_USER=moodleuser
+      - MYSQL_PASSWORD=moodlepass
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --innodb_file_per_table=1
+    restart: unless-stopped
+
+volumes:
+  moodledata:
+  mariadb_data:
+```
+
+Luego ejecuta:
+
+```powershell
+docker-compose up -d
+```
+
+Y accede a `http://localhost:8080` para completar la instalación de Moodle.
+
+---
+
+## ⚙️ Instalación de Moodle (Primera vez)
+
+Cuando accedas a `http://localhost:8080` por primera vez:
+
+1. **Idioma**: Selecciona Español
+2. **Rutas**: Mantén los valores por defecto
+3. **Base de datos**:
+   - Tipo: MariaDB
+   - Host: `mariadb`
+   - Nombre: `moodle`
+   - Usuario: `moodleuser`
+   - Contraseña: `moodlepass`
+4. **Administrador**: Crea usuario admin (recuerda la contraseña)
+5. **Nombre del sitio**: El que desees
+
+Después de la instalación:
+- Ve a **Administración del sitio** → **Plugins** → **Feedback de tareas** → **Feedback con IA**
+- Configura tu API Key de OpenAI global (opcional)
+
+---
+
+## 📝 Licencia
+
+GPL v3 - Compatible con la licencia de Moodle
 - [Desarrollo de Plugins para Moodle](https://moodledev.io)
 
 ## 📄 Licencia
