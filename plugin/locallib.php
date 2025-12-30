@@ -49,13 +49,14 @@ class assign_feedback_ai extends assign_feedback_plugin {
         // Model selection
         $models = array(
             'gpt-3.5-turbo' => 'GPT-3.5 Turbo (Económico)',
-            'gpt-4' => 'GPT-4 (Alta calidad)',
-            'gpt-4-turbo' => 'GPT-4 Turbo (Equilibrado)'
+            'gpt-4o' => 'GPT-4o (Alta calidad)',
+            'gpt-4o-mini' => 'GPT-4o Mini (Equilibrado)',
+            'gpt-4-turbo' => 'GPT-4 Turbo'
         );
         $mform->addElement('select', 'assignfeedback_ai_model',
             get_string('model', 'assignfeedback_ai'), $models);
         $mform->addHelpButton('assignfeedback_ai_model', 'model', 'assignfeedback_ai');
-        $mform->setDefault('assignfeedback_ai_model', 'gpt-3.5-turbo');
+        $mform->setDefault('assignfeedback_ai_model', 'gpt-4o-mini');
     }
     
     /**

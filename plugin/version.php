@@ -9,10 +9,10 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'assignfeedback_ai';
-$plugin->version = 2024121500;
+$plugin->version = 2024122903;
 $plugin->requires = 2022041900; // Moodle 4.0+
 $plugin->maturity = MATURITY_ALPHA;
-$plugin->release = 'v1.0';
+$plugin->release = 'v1.3';
 $plugin->dependencies = array(
     'mod_assign' => 2022041900
 );
