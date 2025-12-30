@@ -5,7 +5,7 @@ version: '3.8'
 
 services:
   moodle:
-    image: ${DOCKERHUB_USER:-tu-usuario}/moodle-feedback-ia:latest
+    image: vacamacho1/moodle-feedback-ia:latest
     container_name: moodle-app
     ports:
       - "8080:80"
